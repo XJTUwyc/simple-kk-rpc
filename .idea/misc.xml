@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/example-provider/pom.xml" />
         <option value="$PROJECT_DIR$/kk-rpc-easy/pom.xml" />
         <option value="$PROJECT_DIR$/example-consumer/pom.xml" />
+        <option value="$PROJECT_DIR$/kk-rpc-core/pom.xml" />
       </list>
     </option>
   </component>
