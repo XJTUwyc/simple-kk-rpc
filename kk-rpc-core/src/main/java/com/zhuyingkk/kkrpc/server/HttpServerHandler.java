@@ -1,10 +1,12 @@
 package com.zhuyingkk.kkrpc.server;
 
+import com.zhuyingkk.kkrpc.RpcApplication;
 import com.zhuyingkk.kkrpc.model.RpcRequest;
 import com.zhuyingkk.kkrpc.model.RpcResponse;
 import com.zhuyingkk.kkrpc.registry.LocalRegistry;
 import com.zhuyingkk.kkrpc.serializer.JdkSerializer;
 import com.zhuyingkk.kkrpc.serializer.Serializer;
+import com.zhuyingkk.kkrpc.serializer.SerializerFactory;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
@@ -21,7 +23,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(HttpServerRequest request) {
         // 指定序列化器
-        final Serializer serializer = new JdkSerializer();
+        final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
 
         // 记录日志
         System.out.println("Received request: " + request.method() + " " + request.uri());
