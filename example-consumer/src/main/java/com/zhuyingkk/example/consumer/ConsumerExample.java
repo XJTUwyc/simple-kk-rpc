@@ -17,10 +17,16 @@ public class ConsumerExample {
         // 获取UserService的实现类对象
         // UserService userService = new UserServiceProxy();    // 静态代理
         UserService userService = ServiceProxyFactory.getProxy(UserService.class);
+
+        System.out.println("获取UserService的实现类对象" + userService.getClass().getName());
+
         User user = new User();
         user.setName("zhuyingkk");
         // 调用
         User newUser = userService.getUser(user);
+
+        System.out.println("调用实现类对象");
+
         if (newUser != null) {
             System.out.println(newUser.getName());
         } else {

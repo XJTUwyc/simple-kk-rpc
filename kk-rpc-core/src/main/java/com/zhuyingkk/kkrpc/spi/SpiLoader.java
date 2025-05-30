@@ -1,6 +1,5 @@
 package com.zhuyingkk.kkrpc.spi;
 
-import cn.hutool.core.io.resource.InputStreamResource;
 import cn.hutool.core.io.resource.ResourceUtil;
 import com.zhuyingkk.kkrpc.serializer.Serializer;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +66,7 @@ public class SpiLoader {
             throw new RuntimeException(String.format("SpiLoader 未加载 %s 类型", tClassName));
         }
         if (!keyClassMap.containsKey(key)) {
-            throw new RuntimeException(String.format("SpiLoader 的 %s 不存在 key=%s的类型", tClassName, key));
+            throw new RuntimeException(String.format("SpiLoader 的 %s 不存在 key=%s 的类型", tClassName, key));
         }
         // 获取到要加载的实现类型
         Class<?> implClass = keyClassMap.get(key);
@@ -93,6 +92,7 @@ public class SpiLoader {
             // 读取每个资源文件
             for (URL resource : resources) {
                 try {
+                    System.out.println("读取资源文件 " + resource.toString());
                     InputStreamReader inputStreamReader = new InputStreamReader(resource.openStream());
                     BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                     String line;

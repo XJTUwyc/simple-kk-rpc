@@ -1,6 +1,5 @@
 package com.zhuyingkk.kkrpc.serializer;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhuyingkk.kkrpc.model.RpcRequest;
 import com.zhuyingkk.kkrpc.model.RpcResponse;
