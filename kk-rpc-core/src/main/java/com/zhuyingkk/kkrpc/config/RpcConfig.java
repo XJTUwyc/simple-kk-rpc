@@ -1,5 +1,6 @@
 package com.zhuyingkk.kkrpc.config;
 
+import com.zhuyingkk.kkrpc.loadbalancer.LoadBalancerKeys;
 import com.zhuyingkk.kkrpc.serializer.SerializerKeys;
 import lombok.Data;
 
@@ -36,4 +37,8 @@ public class RpcConfig {
      * 注册中心配置
      */
     private RegistryConfig registryConfig = new RegistryConfig();
+    /**
+     * 负载均衡器
+     */
+    private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
 }

@@ -1,0 +1,3 @@
+roundRobin=com.zhuyingkk.kkrpc.loadbalancer.RoundRobinLoadBalancer
+random=com.zhuyingkk.kkrpc.loadbalancer.RandomLoadBalancer
+consistentHash=com.zhuyingkk.kkrpc.loadbalancer.ConsistentHashLoadBalancer
