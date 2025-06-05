@@ -1,0 +1,2 @@
+no=com.zhuyingkk.kkrpc.fault.retry.NoRetryStrategy
+fixedInterval=com.zhuyingkk.kkrpc.fault.retry.FixedIntervalRetryStrategy

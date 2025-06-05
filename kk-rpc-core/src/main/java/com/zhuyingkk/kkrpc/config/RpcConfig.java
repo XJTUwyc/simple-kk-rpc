@@ -1,5 +1,6 @@
 package com.zhuyingkk.kkrpc.config;
 
+import com.zhuyingkk.kkrpc.fault.retry.RetryStrategyKeys;
 import com.zhuyingkk.kkrpc.loadbalancer.LoadBalancerKeys;
 import com.zhuyingkk.kkrpc.serializer.SerializerKeys;
 import lombok.Data;
@@ -41,4 +42,8 @@ public class RpcConfig {
      * 负载均衡器
      */
     private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+    /**
+     * 重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.NO;
 }

@@ -7,6 +7,8 @@ import cn.hutool.http.HttpResponse;
 import com.zhuyingkk.kkrpc.RpcApplication;
 import com.zhuyingkk.kkrpc.config.RpcConfig;
 import com.zhuyingkk.kkrpc.constant.RpcConstant;
+import com.zhuyingkk.kkrpc.fault.retry.RetryStrategy;
+import com.zhuyingkk.kkrpc.fault.retry.RetryStrategyFactory;
 import com.zhuyingkk.kkrpc.loadbalancer.LoadBalancer;
 import com.zhuyingkk.kkrpc.loadbalancer.LoadBalancerFactory;
 import com.zhuyingkk.kkrpc.loadbalancer.LoadBalancerKeys;
@@ -79,8 +81,11 @@ public class ServiceProxy implements InvocationHandler {
             requestParams.put("methodName", rpcRequest.getMethodName());
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
 
-            // 发送 TCP 请求
-            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            // 发送 TCP 请求，使用重试机制
+            RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+            RpcResponse rpcResponse = retryStrategy.doRetry(() ->
+                VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo)
+            );
             return rpcResponse.getData();
         } catch (IOException e) {
             throw new RuntimeException("调用失败");
