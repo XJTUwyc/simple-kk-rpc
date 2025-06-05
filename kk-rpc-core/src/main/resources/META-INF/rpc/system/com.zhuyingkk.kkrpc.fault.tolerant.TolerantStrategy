@@ -1,0 +1,4 @@
+failBack=com.zhuyingkk.kkrpc.fault.tolerant.FailBackTolerantStrategy
+failFast=com.zhuyingkk.kkrpc.fault.tolerant.FailFastTolerantStrategy
+failOver=com.zhuyingkk.kkrpc.fault.tolerant.FailOverTolerantStrategy
+failSafe=com.zhuyingkk.kkrpc.fault.tolerant.FailSafeTolerantStrategy
