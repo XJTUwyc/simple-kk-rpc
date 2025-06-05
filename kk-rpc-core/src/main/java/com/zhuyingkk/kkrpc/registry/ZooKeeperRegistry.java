@@ -4,7 +4,6 @@ import cn.hutool.core.collection.ConcurrentHashSet;
 import com.esotericsoftware.minlog.Log;
 import com.zhuyingkk.kkrpc.config.RegistryConfig;
 import com.zhuyingkk.kkrpc.model.ServiceMetaInfo;
-import jdk.jfr.events.ThrowablesEvent;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.CuratorCache;

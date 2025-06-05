@@ -1,38 +1,42 @@
 package com.zhuyingkk.kkrpc.proxy;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import com.sun.jmx.snmp.ServiceName;
 import com.zhuyingkk.kkrpc.RpcApplication;
 import com.zhuyingkk.kkrpc.config.RpcConfig;
 import com.zhuyingkk.kkrpc.constant.RpcConstant;
 import com.zhuyingkk.kkrpc.model.RpcRequest;
 import com.zhuyingkk.kkrpc.model.RpcResponse;
 import com.zhuyingkk.kkrpc.model.ServiceMetaInfo;
+import com.zhuyingkk.kkrpc.protocol.*;
 import com.zhuyingkk.kkrpc.registry.Registry;
 import com.zhuyingkk.kkrpc.registry.RegistryFactory;
 import com.zhuyingkk.kkrpc.serializer.Serializer;
 import com.zhuyingkk.kkrpc.serializer.SerializerFactory;
+import com.zhuyingkk.kkrpc.server.tcp.VertxTcpClient;
+import io.vertx.core.Future;
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.net.NetClient;
+import io.vertx.core.net.NetSocket;
+import io.vertx.core.net.SocketAddress;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 
 /**
- * 服务代理（JDK动态代理）
- * 当用户调用某个接口的方法时，会改为调用invoke方法。
- * 在invoke方法中，我们可以获取到要调用的方法信息，传入的参数列表等，这些就是我们服务提供者需要的参数
- * 所以通过获取到的这些参数构造请求对象就可以完成调用
+ * 服务代理（JDK 动态代理）
  */
 public class ServiceProxy implements InvocationHandler {
+
     /**
      * 调用代理
-     *
-     * @param proxy
-     * @param method
-     * @param args
      *
      * @return
      * @throws Throwable
@@ -53,8 +57,7 @@ public class ServiceProxy implements InvocationHandler {
         try {
             // 序列化
             byte[] bodyBytes = serializer.serialize(rpcRequest);
-            // 发送请求
-            // 使用注册中心和服务发现机制解决
+            // 从注册中心获取服务提供者请求地址
             RpcConfig rpcConfig = RpcApplication.getRpcConfig();
             Registry registry = RegistryFactory.getInstance(rpcConfig.getRegistryConfig().getRegistry());
             ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
@@ -64,21 +67,13 @@ public class ServiceProxy implements InvocationHandler {
             if (CollUtil.isEmpty(serviceMetaInfoList)) {
                 throw new RuntimeException("暂无服务地址");
             }
-            //暂时先取第一个
             ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
-            // 发送请求
-            try (HttpResponse httpResponse = HttpRequest.post(selectedServiceMetaInfo.getServiceAddress())
-                    .body(bodyBytes)
-                    .execute()) {
-                byte[] result = httpResponse.bodyBytes();
-                // 反序列化
-                RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
-                return rpcResponse.getData();
-            }
+            // 发送 TCP 请求
+            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            return rpcResponse.getData();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("调用失败");
         }
 
-        return null;
     }
 }
