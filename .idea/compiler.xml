@@ -13,9 +13,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="kk-rpc-core" />
+        <module name="example-springboot-provider" />
+        <module name="example-springboot-consumer" />
         <module name="example-provider" />
         <module name="example-common" />
+        <module name="kk-rpc-spring-boot-starter" />
+        <module name="kk-rpc-core" />
         <module name="example-consumer" />
       </profile>
     </annotationProcessing>
